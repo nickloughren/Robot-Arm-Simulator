@@ -1,0 +1,70 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import random as ran
+from matplotlib.animation import FuncAnimation
+
+#shows that we've started
+rannum=ran.randint(1,1000000)
+print('start\n'+str(rannum))
+
+#Variables
+
+L1 = 1 #len of first joint
+L2 = 1 #len of second joint
+L3 = 1 #len of third joint
+
+theta1=np.pi/4 #angle of joint 1
+theta2=theta1+10*np.pi/180 #angle of joint 2
+theta3=theta2+10*np.pi/180 #angle of joint 3
+
+x0 = 0
+y0 = 0
+x1 = 0
+y1 = 1
+x2 = 1
+y2 = 1
+x3 = 1
+y3 = 0
+
+x,y=[x0,x1,x2,x3],[y0,y1,y2,y3]
+
+#defining plots
+
+fig,ax = plt.subplots()
+ln, = ax.plot(x,y, color='grey', linewidth=4, marker='.',markersize=20, markerfacecolor='yellow', markeredgecolor='black',)
+
+#functions for animation
+
+def artists():
+    return ln
+
+def update(frame):
+
+#increments angles
+
+    t1= theta1 + .5*frame*np.pi/180
+    t2= theta2 + .2*frame*np.pi/180
+    t3 = theta3 - .5*frame*np.pi/180
+
+    #sets coordinates based on angles
+
+    x1,y1=L1*np.cos(t1),L1*np.sin(t1),
+    x2,y2=x1+L2*np.cos(t2),y1+L2*np.sin(t2),
+    x3,y3=x2+L3*np.cos(t3),y2+L3*np.sin(t3),
+    x,y=[x0,x1,x2,x3],[y0,y1,y2,y3]
+    ln.set_data(x,y)
+
+#setting animation
+
+animation = FuncAnimation(fig, update, frames=150, interval=10, init_func=artists)
+plt.xlim([-3.5,3.5])
+plt.ylim([-3.5,3.5])
+
+
+
+print('DONE! \n'+str(rannum))
+
+#show the plot
+
+plt.show()
+print("plot closed")

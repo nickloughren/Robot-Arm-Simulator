@@ -1,0 +1,94 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import random as ran
+from matplotlib.animation import FuncAnimation
+import math 
+
+#shows that we've started
+rannum=ran.randint(1,1000000)
+print('start\n'+str(rannum))
+
+#Variables
+
+L1 = 1 #len of first joint
+L2 = 1 #len of second joint
+#L3 = 1 #len of third joint
+
+theta1=np.pi/4 #angle of joint 1
+theta2= 10*np.pi/180 #angle of joint 2
+#theta3=theta2+10*np.pi/180 #angle of joint 3
+
+xi=0
+yi=2
+
+xf=2
+yf=0
+
+x0 = 0
+y0 = 0
+x1 = 0
+y1 = 1
+x2 = 1
+y2 = 1
+#x3 = 1
+#y3 = 0
+
+x,y=[x0,x1,x2],[y0,y1,y2]
+
+#defining plots
+
+fig,ax = plt.subplots()
+ln, = ax.plot(x,y, color='grey', linewidth=4, marker='.',markersize=20, markerfacecolor='yellow', markeredgecolor='black',)
+
+#functions for animation
+
+frameNum=100
+
+def artists():
+    return ln
+
+def update(frame):
+
+#increments angles
+
+    t1= theta1 + .5*frame*np.pi/180
+    t2= theta2 + 1*frame*np.pi/180
+
+    x=xi+(xf-xi)*frame/frameNum
+    y=yi+(yf-yi)*frame/frameNum
+
+    #t3 = theta3 - .5*frame*np.pi/180
+
+    t2=np.arccos((x**2+y**2-L1**2-L2**2)/(2*L1*L2))
+    #t1=np.arctan(y*(L1+L2*np.cos(t2))-x*L2*np.sin(t2))/(x*(L1+L2*np.cos(t2))+y*L2*np.sin(t2))
+    if x!=0:
+        t1=np.arctan(y/x) - np.arctan(L2*np.sin(t2)/(L1+L2*np.cos(t2)))
+
+    #sets coordinates based on angles
+    
+    x1,y1=L1*np.cos(t1),L1*np.sin(t1),
+    x2,y2=x1+L2*np.cos(t1+t2),y1+L2*np.sin(t1+t2),
+    print("x(input)=",x)
+    print("x2=","%.2f" % x2,)
+
+    print("y(input)=",y)
+    print("y2=","%.2f" % y2)
+   
+    #x3,y3=x2+L3*np.cos(t3),y2+L3*np.sin(t3),
+    x,y=[x0,x1,x2],[y0,y1,y2]
+    ln.set_data(x,y)
+
+#setting animation
+
+animation = FuncAnimation(fig, update, frames=frameNum, interval=200, init_func=artists)
+plt.xlim([-2,2])
+plt.ylim([-2,2])
+
+
+
+print('DONE! \n'+str(rannum))
+
+#show the plot
+
+plt.show()
+print("plot closed")
